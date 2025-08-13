@@ -1,0 +1,238 @@
+/* --- Base Styles & Variables --- */
+:root {
+    --primary-color: #2563eb;
+    --primary-dark: #1d4ed8;
+    --danger-color: #dc2626;
+    --danger-dark: #b91c1c;
+    --success-color: #22c55e;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.5;
+    color: var(--gray-800);
+    background-color: var(--gray-50);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+#app {
+    flex-grow: 1;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* --- Header --- */
+.header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 1.5rem 0;
+    flex-shrink: 0;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.logo h1 {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+/* --- Buttons --- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    gap: 0.5rem;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+}
+
+.btn:disabled {
+    background-color: var(--gray-400);
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* --- Auth Section Styles --- */
+.auth-main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    flex-grow: 1;
+}
+
+.auth-form-container {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+}
+
+.auth-form-container h2 {
+    text-align: center;
+    font-size: 1.875rem;
+    font-weight: 800;
+    color: var(--gray-900);
+    margin-bottom: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--gray-700);
+    margin-bottom: 0.5rem;
+}
+
+.input-icon {
+    position: relative;
+}
+
+.input-icon svg {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray-400);
+    pointer-events: none;
+}
+
+.input-icon input {
+    width: 100%;
+    padding: 0.6rem 0.75rem 0.6rem 2.5rem;
+    border: 1px solid var(--gray-300);
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+}
+
+.input-icon input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* --- Styles for Error Messages --- */
+.error-message {
+    color: var(--danger-color);
+    font-size: 0.8rem;
+    display: block;
+    margin-top: 0.25rem;
+    min-height: 1.1em; /* Reserve space */
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.error-message.visible {
+    visibility: visible;
+    opacity: 1;
+}
+
+.input-icon input.invalid-input {
+     border-color: var(--danger-color);
+}
+.input-icon input.invalid-input:focus {
+    border-color: var(--danger-color);
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.auth-api-error {
+    color: var(--danger-color);
+    font-size: 0.875rem;
+    text-align: center;
+    margin-top: 1rem;
+    min-height: 1.2em;
+}
+
+#auth-form button[type="submit"] {
+    width: 100%;
+    margin-top: 1.5rem;
+    padding: 0.75rem 1rem;
+}
+
+.auth-switch {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.875rem;
+    color: var(--gray-600);
+}
+
+.auth-switch a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.auth-switch a:hover {
+    text-decoration: underline;
+}
+
+/* --- Footer --- */
+.footer {
+    background-color: var(--gray-800);
+    color: var(--gray-400);
+    padding: 2rem 0;
+    margin-top: 3rem;
+    flex-shrink: 0;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

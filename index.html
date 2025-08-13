@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PowerBill India</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- ======================= AUTHENTICATION CONTAINER ======================= -->
+        <div id="auth-container" class="active">
+            <header class="header">
+                <div class="container">
+                    <div class="logo">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                        <h1>PowerBill India</h1>
+                    </div>
+                </div>
+            </header>
+
+            <main class="auth-main">
+                <div class="auth-form-container">
+                    <h2 id="auth-title">Sign in to your account</h2>
+                    <form id="auth-form" novalidate>
+                        <!-- Signup Specific Fields - Initially Hidden -->
+                        <div id="signup-fields" class="hidden">
+                            <div class="form-group">
+                                <label for="name">Full Name</label>
+                                <div class="input-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                    <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+                                </div>
+                                <span class="error-message" id="name-error"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <div class="input-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                                    <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
+                                </div>
+                                <span class="error-message" id="phone-error"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="consumer-number">Consumer ID</label>
+                                <div class="input-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                                    <input type="text" id="consumer-number" name="consumer-number" placeholder="Enter consumer number" required>
+                                </div>
+                                <span class="error-message" id="consumer-number-error"></span>
+                            </div>
+                        </div>
+
+                        <!-- Common Fields -->
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <div class="input-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                            </div>
+                            <span class="error-message" id="email-error"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <div class="input-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                            </div>
+                            <span class="error-message" id="password-error"></span>
+                        </div>
+
+                        <!-- General API Error Message Area -->
+                        <p id="auth-error" class="auth-api-error"></p>
+
+                        <!-- Button text changes via JS -->
+                        <button type="submit" class="btn btn-primary">Sign In</button>
+                    </form>
+                     <!-- Switch between Sign In / Sign Up -->
+                    <p class="auth-switch" id="auth-switch-container">
+                        Don't have an account? <a href="#" id="auth-switch-btn">Sign up</a>
+                    </p>
+                </div>
+            </main>
+        </div>
+<!-- ======================= DASHBOARD CONTAINER (Initially Hidden) ======================= -->
+<div id="dashboard-container" class="hidden">
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                     <h1>PowerBill India</h1>
+                </div>
+                <button id="logout-btn" class="btn btn-outline">Logout</button>
+            </div>
+        </div>
+    </header>
+    <main class="dashboard-main">
+        <div class="container">
+            <!-- Payment Alert -->
+            <div id="payment-alert" class="payment-alert" style="display: none;">
+                <!-- Content added by JS -->
+            </div>
+            <!-- Consumer Info Card -->
+            <div class="card">
+                <div class="consumer-info">
+                    <div class="info-section">
+                        <h2>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                            Consumer Information
+                        </h2>
+                        <div class="info-grid">
+                            <div><p class="label">Consumer ID</p><p class="value" data-value="consumerId">Loading...</p></div>
+                            <div><p class="label">Meter Number</p><p class="value" data-value="meterNumber">Loading...</p></div>
+                            <div><p class="label">Supply Type</p><p class="value" data-value="supplyType">Loading...</p></div>
+                            <div><p class="label">Sanctioned Load</p><p class="value" data-value="sanctionedLoad">Loading...</p></div>
+                            <div><p class="label">Name</p><p class="value" data-value="name">Loading...</p></div>
+                            <div><p class="label">Email</p><p class="value" data-value="email">Loading...</p></div>
+                        </div>
+                    </div>
+                    <div class="bill-summary">
+                        <div class="bill-card"> <!-- JS adds 'unpaid' class -->
+                            <div class="due-date" data-value="dueDate">Loading...</div>
+                            <div class="amount" data-value="amount">Loading...</div>
+                            <p class="period" data-value="period">Loading...</p>
+                            <button class="btn btn-danger pay-now-btn" style="display: none;">Pay Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ... More dashboard cards will go here ... -->
+        </div>
+    </main>
+</div>
+
+        <!-- ======================= PAYMENT MODAL (Initially Hidden) ======================= -->
+        <div id="payment-modal" class="modal">
+            <!-- Payment modal will be built in a later step -->
+        </div>
+    </div> <!-- End #app -->
+
+    <!-- ======================= FOOTER ======================= -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="logo">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                    <span>PowerBill India</span>
+                </div>
+                <div class="copyright">
+                    © 2025 PowerBill India. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+</html>
