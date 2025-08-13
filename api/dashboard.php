@@ -1,5 +1,5 @@
 <?php
-// File: api/dashboard.php
+// File: api/dashboard.php (Updated for real data)
 
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
@@ -17,7 +17,7 @@ header('Content-Type: application/json');
 
 // --- Authentication Check ---
 if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
-    http_response_code(401); // Unauthorized
+    http_response_code(401);
     echo json_encode(['message' => 'Not authorized. Please log in.']);
     exit;
 }
@@ -33,7 +33,7 @@ $userId = $_SESSION['user_id'];
 $dashboardData = [];
 
 try {
-    // 1. Fetch User Data
+    // 1. Fetch User Data (Same as before)
     $sqlUser = "SELECT name, email, phone, consumer_id, meter_number, supply_type, sanctioned_load FROM users WHERE id = ?";
     $stmtUser = $conn->prepare($sqlUser);
     $stmtUser->bind_param("i", $userId);
@@ -53,30 +53,74 @@ try {
         'supplyType' => $userData['supply_type'], 'sanctionedLoad' => $userData['sanctioned_load'],
     ];
 
-    // 2. Fetch Latest Bill Data (FOR NOW, WE'LL SIMULATE THIS)
-    // In the next phase, we will replace this with a real DB query
-    // This is placeholder data to build the UI.
-    $dashboardData['currentBill'] = [
-        'id' => 1, // Example Bill ID
-        'amount' => 1234.56,
-        'dueDate' => 'June 25, 2025',
-        'period' => 'May 1, 2025 - May 31, 2025',
-        'status' => 'unpaid',
-        'slabCharges' => [
-            ['range' => '0-100 Units', 'rate' => 5.50, 'units' => 100, 'amount' => 550.00],
-            ['range' => '101-200 Units', 'rate' => 7.50, 'units' => 50, 'amount' => 375.00]
-        ],
-        'billComponents' => [
-            'energyCharges' => 925.00, 'fixedCharges' => 100.00,
-            'fuelSurcharge' => 50.00, 'taxGST' => 159.56,
-            'subsidy' => -100.00, 'netAmount' => 1234.56,
-        ],
-        'consumptionHistory' => [
-            ['month' => 'Mar', 'units' => 120],
-            ['month' => 'Apr', 'units' => 135],
-            ['month' => 'May', 'units' => 150],
-        ]
-    ];
+    // 2. Fetch Latest Bill Data (REAL DATABASE QUERY)
+    $sqlBill = "SELECT * FROM bills WHERE user_id = ? ORDER BY bill_period_end DESC LIMIT 1";
+    $stmtBill = $conn->prepare($sqlBill);
+    $stmtBill->bind_param("i", $userId);
+    $stmtBill->execute();
+    $resultBill = $stmtBill->get_result();
+
+    $latestBillData = null;
+    if ($resultBill->num_rows === 1) {
+        $billData = $resultBill->fetch_assoc();
+        $billId = $billData['id'];
+
+        // Fetch Slab Data for this specific bill
+        $sqlSlabs = "SELECT slab_range, rate, units, amount FROM bill_slabs WHERE bill_id = ? ORDER BY id ASC";
+        $stmtSlabs = $conn->prepare($sqlSlabs);
+        $stmtSlabs->bind_param("i", $billId);
+        $stmtSlabs->execute();
+        $resultSlabs = $stmtSlabs->get_result();
+        $slabCharges = [];
+        while ($slab = $resultSlabs->fetch_assoc()) {
+             $slabCharges[] = ['range' => $slab['slab_range'], 'rate' => floatval($slab['rate']), 'units' => intval($slab['units']), 'amount' => floatval($slab['amount'])];
+        }
+        $stmtSlabs->close();
+        
+        // Fetch Consumption History (REAL QUERY for last 3 bills)
+        $sqlHistory = "SELECT bill_period_end, units_consumed FROM bills WHERE user_id = ? ORDER BY bill_period_end DESC LIMIT 3";
+        $stmtHistory = $conn->prepare($sqlHistory);
+        $stmtHistory->bind_param("i", $userId);
+        $stmtHistory->execute();
+        $resultHistory = $stmtHistory->get_result();
+        $consumptionHistory = [];
+        while ($historyRow = $resultHistory->fetch_assoc()) {
+            $consumptionHistory[] = [
+                'month' => date('M', strtotime($historyRow['bill_period_end'])),
+                'units' => intval($historyRow['units_consumed'])
+            ];
+        }
+        // Reverse to show oldest first in the chart
+        $consumptionHistory = array_reverse($consumptionHistory);
+        $stmtHistory->close();
+
+        // Structure the bill data for the frontend
+        $latestBillData = [
+            'id' => $billId,
+            'amount' => floatval($billData['net_amount']),
+            'dueDate' => date('F j, Y', strtotime($billData['due_date'])),
+            'period' => date('F j', strtotime($billData['bill_period_start'])) . ' - ' . date('F j, Y', strtotime($billData['bill_period_end'])),
+            'status' => $billData['status'],
+            'slabCharges' => $slabCharges,
+            'billComponents' => [
+                'energyCharges' => floatval($billData['energy_charges']), 'fixedCharges' => floatval($billData['fixed_charges']),
+                'fuelSurcharge' => floatval($billData['fuel_surcharge']), 'taxGST' => floatval($billData['tax_amount']),
+                'subsidy' => -abs(floatval($billData['subsidy_amount'])), 'netAmount' => floatval($billData['net_amount']),
+            ],
+            'consumptionHistory' => $consumptionHistory
+        ];
+
+    } else {
+        // No bills found for user, provide a default structure
+        $latestBillData = [
+            'id' => null, 'amount' => 0, 'dueDate' => 'N/A', 'period' => 'No bills found', 'status' => 'none',
+            'slabCharges' => [], 'billComponents' => ['energyCharges' => 0, 'fixedCharges' => 0, 'fuelSurcharge' => 0, 'taxGST' => 0, 'subsidy' => 0, 'netAmount' => 0],
+            'consumptionHistory' => []
+        ];
+    }
+    $stmtBill->close();
+    
+    $dashboardData['currentBill'] = $latestBillData;
     
     http_response_code(200);
     echo json_encode($dashboardData);
