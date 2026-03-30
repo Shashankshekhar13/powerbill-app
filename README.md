@@ -69,13 +69,7 @@ cd server && node server.js       # http://localhost:5000
 cd client && npm start            # http://localhost:3000
 ```
 
-## Sample Logins
 
-| Email | Password |
-|-------|----------|
-| sandhya.sinha@gmail.com | password123 |
-| shashank.shekhar@gmail.com | pass4567 |
-| harshit.sharma@gmail.com | pass1234 |
 
 ## Project Structure
 
