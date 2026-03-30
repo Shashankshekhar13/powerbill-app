@@ -132,7 +132,8 @@
     pointer-events: none;
 }
 
-.input-icon input {
+.input-icon input,
+.input-icon select {
     width: 100%;
     padding: 0.6rem 0.75rem 0.6rem 2.5rem;
     border: 1px solid var(--gray-300);
@@ -141,9 +142,11 @@
     transition: all 0.2s;
     background: white;
     color: var(--gray-800);
+    appearance: auto;
 }
 
-.input-icon input:focus {
+.input-icon input:focus,
+.input-icon select:focus {
     outline: none;
     border-color: var(--primary-color);
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);

@@ -6,7 +6,8 @@ const REGEX = {
     phone: /^[6-9]\d{9}$/,
     consumerId: /^[A-Za-z0-9-]{5,}$/,
     email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-    password: /.{8,}/
+    password: /.{8,}/,
+    meterNumber: /^[A-Za-z0-9-]{5,}$/
 };
 
 const API_URL = 'http://localhost:5000/api';
@@ -14,7 +15,8 @@ const API_URL = 'http://localhost:5000/api';
 const AuthPage = ({ onLoginSuccess }) => {
     const [isLoginView, setIsLoginView] = useState(true);
     const [formData, setFormData] = useState({
-        name: '', phone: '', consumerId: '', email: '', password: ''
+        name: '', phone: '', consumerId: '', email: '', password: '',
+        meterNumber: '', supplyType: 'Domestic - 1 Phase', sanctionedLoad: '3 kW'
     });
     const [errors, setErrors] = useState({});
     const [apiError, setApiError] = useState('');
@@ -39,6 +41,9 @@ const AuthPage = ({ onLoginSuccess }) => {
             }
             if (!REGEX.consumerId.test(formData.consumerId.trim())) {
                 newErrors.consumerId = 'Enter a valid Consumer ID (min 5 chars).';
+            }
+            if (!REGEX.meterNumber.test(formData.meterNumber.trim())) {
+                newErrors.meterNumber = 'Enter a valid Meter Number (min 5 chars).';
             }
         }
 
@@ -73,7 +78,10 @@ const AuthPage = ({ onLoginSuccess }) => {
                     email: formData.email,
                     password: formData.password,
                     phone: formData.phone,
-                    consumerId: formData.consumerId
+                    consumerId: formData.consumerId,
+                    meterNumber: formData.meterNumber,
+                    supplyType: formData.supplyType,
+                    sanctionedLoad: formData.sanctionedLoad
                 };
             }
 
@@ -91,13 +99,8 @@ const AuthPage = ({ onLoginSuccess }) => {
                 return;
             }
 
-            if (isLoginView) {
-                onLoginSuccess();
-            } else {
-                alert(result.message || 'Signup successful! Please sign in.');
-                toggleView();
-                setFormData({ name: '', phone: '', consumerId: '', email: '', password: '' });
-            }
+            // Both signin and signup now return a token cookie → go to dashboard
+            onLoginSuccess();
 
         } catch (error) {
             setApiError('A network error occurred. Please try again.');
@@ -110,7 +113,10 @@ const AuthPage = ({ onLoginSuccess }) => {
         setIsLoginView(prev => !prev);
         setErrors({});
         setApiError('');
-        setFormData({ name: '', phone: '', consumerId: '', email: '', password: '' });
+        setFormData({
+            name: '', phone: '', consumerId: '', email: '', password: '',
+            meterNumber: '', supplyType: 'Domestic - 1 Phase', sanctionedLoad: '3 kW'
+        });
     };
 
     return (
@@ -175,6 +181,52 @@ const AuthPage = ({ onLoginSuccess }) => {
                                             className={errors.consumerId ? 'invalid-input' : ''} />
                                     </div>
                                     <span className={`error-message ${errors.consumerId ? 'visible' : ''}`}>{errors.consumerId || ''}</span>
+                                </div>
+
+                                <div className="form-group">
+                                    <label htmlFor="meterNumber">Meter Number</label>
+                                    <div className="input-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                                        </svg>
+                                        <input type="text" id="meterNumber" name="meterNumber" placeholder="Enter meter number"
+                                            value={formData.meterNumber} onChange={handleChange}
+                                            className={errors.meterNumber ? 'invalid-input' : ''} />
+                                    </div>
+                                    <span className={`error-message ${errors.meterNumber ? 'visible' : ''}`}>{errors.meterNumber || ''}</span>
+                                </div>
+
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label htmlFor="supplyType">Supply Type</label>
+                                        <div className="input-icon">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                                            </svg>
+                                            <select id="supplyType" name="supplyType" value={formData.supplyType} onChange={handleChange}>
+                                                <option value="Domestic - 1 Phase">Domestic - 1 Phase</option>
+                                                <option value="Domestic - 3 Phase">Domestic - 3 Phase</option>
+                                                <option value="Commercial">Commercial</option>
+                                                <option value="Industrial">Industrial</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="sanctionedLoad">Sanctioned Load</label>
+                                        <div className="input-icon">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                                            </svg>
+                                            <select id="sanctionedLoad" name="sanctionedLoad" value={formData.sanctionedLoad} onChange={handleChange}>
+                                                <option value="2 kW">2 kW</option>
+                                                <option value="3 kW">3 kW</option>
+                                                <option value="4 kW">4 kW</option>
+                                                <option value="5 kW">5 kW</option>
+                                                <option value="8 kW">8 kW</option>
+                                                <option value="10 kW">10 kW</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         )}
