@@ -5,7 +5,7 @@ const PaymentModal = ({ bill, consumerInfo, onClose, onPaymentSuccess }) => {
     const [success, setSuccess] = useState(null);
     const [error, setError] = useState('');
 
-    const API_URL = 'http://localhost:5000/api';
+    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
     const openRazorpay = useCallback(async () => {
         setError('');

@@ -10,7 +10,7 @@ const REGEX = {
     meterNumber: /^[A-Za-z0-9-]{5,}$/
 };
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 const AuthPage = ({ onLoginSuccess }) => {
     const [isLoginView, setIsLoginView] = useState(true);
